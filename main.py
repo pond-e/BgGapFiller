@@ -1,4 +1,3 @@
-from typing import Annotated
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, File, UploadFile, Request, Form
