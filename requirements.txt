@@ -1,1 +1,4 @@
 fastapi[all]
+typing
+opencv-python
+numpy
