@@ -1,3 +1,4 @@
+from typing import List
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, File, UploadFile, Request, Form
@@ -27,7 +28,7 @@ templates = Jinja2Templates(directory="templates")
 
 
 @app.post("/uploadfiles/")
-async def create_upload_files(request: Request, files: list[UploadFile], deviceWidth: int = Form(), deviceHeight: int = Form()):
+async def create_upload_files(request: Request, files: List[UploadFile], deviceWidth: int = Form(), deviceHeight: int = Form()):
     contents = await files[0].read()
     image_data = base64.b64encode(contents).decode("utf-8")
 
