@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+    <title>BgGapFiller</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', path='/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', path='/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', path='/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', path='/site.webmanifest') }}">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+</head>
+
+<body class="main-frame">
+    <div class="title-parant">
+        <img src="{{ url_for('static', path='/icon-pc-sakan-1.png')}}" class="icon" alt="icon">
+        <div class="title-text">BgGapFiller</div>
+    </div>
+    <div class="main-box-1">
+        <div class="form-group">
+            <form action="/uploadfiles/" enctype="multipart/form-data" method="post">
+                <label class="input-file-button">
+                    <input name="files" id="upFile" type="file" onChange="uploadFileName()"><div class="select-form-text">ファイルを選択</div>
+                </label>
+                <p class="image-name-text" id="fileName">選択されていません</p>
+
+                <select id="selectDevice" name="selectDevice" class="select-device" onchange="getSelectedOption()">
+                    <option value="">デバイスを選択</option>
+                    <option value="other">自分で横×縦を入力</option>
+                    <option value="iPhoneSE">iPhone SE</option>
+                    <option value="iPhoneXR">iPhone XR</option>
+                    <option value="iPhone12Pro">iPhone 12 Pro</option>
+                    <option value="Pixel5">Pixel5</option>
+                    <option value="GalaxyS8+">Galaxy S8+</option>
+                    <option value="GalaxyS20Ultra">Galaxy S20 Ultra</option>
+                    <option value="iPadAir">iPad Air</option>
+                    <option value="iPadMini">iPad Mini</option>
+                    <option value="SurfacePro7">Surface Pro 7</option>
+                    <option value="SurfaceDuo">Surface Duo</option>
+                    <option value="GalaxyFold">Galaxy Fold</option>
+                    <option value="GalaxyA51/71">Galaxy A51/71</option>
+                    <option value="NestHub">Nest Hub</option>
+                    <option value="NestHubMax">Nest Hub Max</option>
+                </select> 
+
+                <div class="input-size">
+                    <input type="number" id="deviceWidth" name="deviceWidth" class="input-size-box">
+                    <div class="kakeru">×</div>
+                    <input type="number" id="deviceHeight" name="deviceHeight" class="input-size-box">
+                </div>
+
+                <input type="submit" class="btns submit">
+                
+            </form>
+        </div>
+    </div>
+
+    <div class="main-box-2">
+        <div class="how-use-1">使い方</div>
+        <div class="how-use-2">
+            1. 背景画像を<wbr />アップロードする
+        </div>
+        <div class="how-use-2">
+            2. デバイスを選択する<wbr />もしくは解像度を入力する
+        </div>
+        <div class="how-use-2">3. 送信ボタンを押す</div>
+        <div class="how-use-3">
+            現在使用しているデバイス用に<wbr>隙間を単色で埋めたような画像が<wbr>生成されます<br>色は元画像で<wbr>一番多く使われている色が<wbr>自動的に選択されます
+        </div>
+    </div>
+    
+    <script>
+        function uploadFileName() {
+            const uploadedFile = document.getElementById("upFile").files[0];
+            console.log(uploadedFile.name);
+            const showFileName = document.getElementById("fileName");
+            showFileName.textContent = uploadedFile.name;
+        }
+
+        function getSelectedOption() {
+            selectDevice = document.getElementById("selectDevice");
+            console.log(selectDevice.value);
+            inputDeviceWidth = document.getElementById("deviceWidth");
+            inputDeviceHeight = document.getElementById("deviceHeight");
+
+            switch (selectDevice.value) {
+                case "iPhoneSE":
+                    inputDeviceWidth.value = 375;
+                    inputDeviceHeight.value = 667;
+                    break;
+                case "iPhoneXR":
+                    inputDeviceWidth.value = 414;
+                    inputDeviceHeight.value = 896;
+                    break;
+                case "iPhone12Pro":
+                    inputDeviceWidth.value = 390;
+                    inputDeviceHeight.value = 844;
+                    break;
+                case "Pixel5":
+                    inputDeviceWidth.value = 393;
+                    inputDeviceHeight.value = 851;
+                    break;
+                case "GalaxyS8+":
+                    inputDeviceWidth.value = 360;
+                    inputDeviceHeight.value = 740;
+                    break;
+                case "GalaxyS20Ultra":
+                    inputDeviceWidth.value = 412;
+                    inputDeviceHeight.value = 915;
+                    break;
+                case "iPadAir":
+                    inputDeviceWidth.value = 820;
+                    inputDeviceHeight.value = 1180;
+                    break;
+                case "iPadMini":
+                    inputDeviceWidth.value = 768;
+                    inputDeviceHeight.value = 1024;
+                    break;
+                case "SurfacePro7":
+                    inputDeviceWidth.value = 912;
+                    inputDeviceHeight.value = 1368;
+                    break;
+                case "SurfaceDuo":
+                    inputDeviceWidth.value = 540;
+                    inputDeviceHeight.value = 720;
+                    break;
+                case "GalaxyFold":
+                    inputDeviceWidth.value = 280;
+                    inputDeviceHeight.value = 653;
+                    break;
+                case "GalaxyA51/71":
+                    inputDeviceWidth.value = 412;
+                    inputDeviceHeight.value = 914;
+                    break;
+                case "NestHub":
+                    inputDeviceWidth.value = 1024;
+                    inputDeviceHeight.value = 600;
+                    break;
+                case "NestHubMax":
+                    inputDeviceWidth.value = 1280;
+                    inputDeviceHeight.value = 800;
+                    break;
+
+                default:
+                    console.log("not decleared device");
+            }
+        }
+    </script>
+</body>
+
+
+</html>
