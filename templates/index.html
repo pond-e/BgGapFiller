@@ -24,9 +24,9 @@
     </div>
     <div class="main-box-1">
         <div class="form-group">
-            <form action="/uploadfiles/" enctype="multipart/form-data" method="post">
+            <form id="generateForm">
                 <label class="input-file-button">
-                    <input name="files" id="upFile" type="file" onChange="uploadFileName()"><div class="select-form-text">ファイルを選択</div>
+                    <input name="file" id="upFile" type="file" accept="image/*" required onChange="uploadFileName()"><div class="select-form-text">ファイルを選択</div>
                 </label>
                 <p class="image-name-text" id="fileName">選択されていません</p>
 
@@ -50,15 +50,20 @@
                 </select> 
 
                 <div class="input-size">
-                    <input type="number" id="deviceWidth" name="deviceWidth" class="input-size-box">
+                    <input type="number" id="deviceWidth" name="deviceWidth" class="input-size-box" min="1" required>
                     <div class="kakeru">×</div>
-                    <input type="number" id="deviceHeight" name="deviceHeight" class="input-size-box">
+                    <input type="number" id="deviceHeight" name="deviceHeight" class="input-size-box" min="1" required>
                 </div>
 
-                <input type="submit" class="btns submit">
-                
+                <input type="submit" id="submitButton" class="btns submit" value="生成する">
             </form>
+            <p id="status" class="status-text" role="status"></p>
         </div>
+    </div>
+
+    <div id="result" class="result-box" hidden>
+        <img id="resultImage" class="result-image" alt="生成した背景画像">
+        <a id="downloadLink" class="btns download" download="bggapfiller.jpg">画像を保存</a>
     </div>
 
     <div class="main-box-2">
@@ -76,6 +81,48 @@
     </div>
     
     <script>
+        const form = document.getElementById("generateForm");
+        const submitButton = document.getElementById("submitButton");
+        const statusText = document.getElementById("status");
+        const result = document.getElementById("result");
+        const resultImage = document.getElementById("resultImage");
+        const downloadLink = document.getElementById("downloadLink");
+        let resultUrl = null;
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            submitButton.disabled = true;
+            statusText.classList.remove("error");
+            statusText.textContent = "生成中…";
+
+            try {
+                const response = await fetch("/api/generate", {
+                    method: "POST",
+                    body: new FormData(form),
+                });
+                if (!response.ok) {
+                    const body = await response.json().catch(() => null);
+                    throw new Error(body?.detail ?? `生成に失敗しました（${response.status}）`);
+                }
+
+                const blob = await response.blob();
+                if (resultUrl) URL.revokeObjectURL(resultUrl);
+                resultUrl = URL.createObjectURL(blob);
+                resultImage.src = resultUrl;
+                downloadLink.href = resultUrl;
+                result.hidden = false;
+                statusText.textContent = "";
+                result.scrollIntoView({ behavior: "smooth" });
+            } catch (error) {
+                statusText.classList.add("error");
+                statusText.textContent = error instanceof TypeError
+                    ? "サーバーに接続できませんでした。時間をおいて再度お試しください。"
+                    : error.message;
+            } finally {
+                submitButton.disabled = false;
+            }
+        });
+
         function uploadFileName() {
             const uploadedFile = document.getElementById("upFile").files[0];
             console.log(uploadedFile.name);
